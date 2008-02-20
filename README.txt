@@ -16,10 +16,10 @@ Directions:
    1. install version 0.15.3 of Hadoop
    2. work in the "jyte" directory
    3. download the "cred" data from http://jyte.com/site/api
-   4. gunzip the "cred" data - TWICE
+   4. gunzip the "cred" data TWICE, saved as "cred.txt"
    5. edit environment variables at the top of "x.sh"
    6. run the "x.sh" script
-   7. results are stored as TSV files in "prevrank"
+   7. results get stored as TSV files in "prevrank"
 
 References:
    http://jyte.com
