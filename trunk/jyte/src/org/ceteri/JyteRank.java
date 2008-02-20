@@ -1,4 +1,4 @@
-//package org.apache.hadoop.examples;
+package org.ceteri;
 
 import java.io.File;
 import java.io.IOException;
