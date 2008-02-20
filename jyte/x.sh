@@ -6,7 +6,7 @@ HADOOP=~/hadoop-${VERSION}
 
 ## build the JAR file
 
-javac -classpath ${HADOOP}/hadoop-${VERSION}-core.jar -d classes JyteRank.java 
+javac -classpath ${HADOOP}/hadoop-${VERSION}-core.jar -d classes src/JyteRank.java 
 jar -cvf jyterank.jar -C classes/ .
 
 ## setup the HDFS directory structure
