@@ -35,9 +35,10 @@ import org.apache.hadoop.util.ToolRunner;
 
 
 /**
- * Prepares data which has been downloaded from the jyte.com API cred
- * database: http://jyte.com/static/misc/cred.txt.gz
- * @author Paco NATHAN http://www.spock.com/Paco-Nathan
+ * Prepare data downloaded from the jyte.com API cred database:
+ * http://jyte.com/static/misc/cred.txt.gz
+ *
+ * @author Paco NATHAN http://code.google.com/p/ceteri-mapred/
  */
 
 public class
