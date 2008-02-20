@@ -37,7 +37,7 @@ import org.apache.hadoop.util.ToolRunner;
 /**
  * Prepares data which has been downloaded from the jyte.com API cred
  * database: http://jyte.com/static/misc/cred.txt.gz
- * @author Paco NATHAN <ceteri@gmail.com>
+ * @author Paco NATHAN http://www.spock.com/Paco-Nathan
  */
 
 public class
@@ -45,7 +45,7 @@ public class
     extends Configured
     implements Tool
 {
-    public static final int ITERATIONS = 3;
+    public static final int ITERATIONS = 9;
 
     /**
      * User counters.
