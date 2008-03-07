@@ -39,12 +39,12 @@ http://code.google.com/p/ceteri-mapred/
  value="${basedir}/../../hadoop-${hadoop.version}"
 />
 <property
- name="jyte.data"
+ name="app.data"
  location="${basedir}/cred.txt"
 />
 <property
- name="jyte.jar"
- location="${basedir}/jyterank.jar"
+ name="app.jar"
+ location="${basedir}/app.jar"
 />
 
 
@@ -101,7 +101,7 @@ http://code.google.com/p/ceteri-mapred/
     <include name="**/*~"/>
 </fileset>
 </delete>
-<delete dir="${build.dir}"/>
+<delete dir="${build.dir}/**"/>
 <delete dir="${docs.dir}"/>
 </target>
 
@@ -128,7 +128,7 @@ http://code.google.com/p/ceteri-mapred/
   depends="compile"
 >
 <jar
- destfile="${jyte.jar}"
+ destfile="${app.jar}"
  basedir="${build.dir}"
  includes="org/ceteri/**"
 />
@@ -149,7 +149,7 @@ http://code.google.com/p/ceteri-mapred/
 >
  <arg value="fs"/>
  <arg value="-put"/>
- <arg value="${jyte.data}"/>
+ <arg value="${app.data}"/>
  <arg value="input/cred01"/>
 </exec>
 </target>
@@ -164,7 +164,7 @@ http://code.google.com/p/ceteri-mapred/
  executable="${hadoop.dir}/bin/hadoop"
 >
  <arg value="jar"/>
- <arg value="${jyte.jar}"/>
+ <arg value="${app.jar}"/>
  <arg value="org.ceteri.mapred.JyteRank"/>
  <arg value="input"/>
  <arg value="from2to"/>
