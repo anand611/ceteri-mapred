@@ -1,4 +1,4 @@
-package org.ceteri;
+package org.ceteri.mapred;
 
 import java.io.File;
 import java.io.IOException;
