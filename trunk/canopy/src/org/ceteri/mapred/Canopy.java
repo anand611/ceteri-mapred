@@ -29,24 +29,28 @@ public class
 
 
     /**
-     * Main entry point.
+     * Protected members.
      */
 
-    public static void
-	main (final String[] args)
+    protected final LinkedList<Datum> data_list = new LinkedList<Datum>();
+    protected final HashSet<HashSet<Datum>> canopy_set = new HashSet<HashSet<Datum>>();
+
+    protected final SummaryStatistics year_stats = new SummaryStatistics();
+    protected final SummaryStatistics size_stats = new SummaryStatistics();
+
+    protected double mean_distance = 0.0D;
+    protected double loose_threshold = 0.0D;
+    protected double tight_threshold = 0.0D;
+
+
+    /**
+     * Load the data from a text file
+     */
+
+    public void
+	loadData (final String data_file)
 	throws Exception
- {
-	final String data_file = args[0];
-
-	long start_time = 0L;
-	long elapsed_time = 0L;
-
-	final LinkedList<Datum> data_list = new LinkedList<Datum>();
-	final SummaryStatistics year_stats = new SummaryStatistics();
-	final SummaryStatistics size_stats = new SummaryStatistics();
-
-	// load the text from a file
-
+    {
         final BufferedReader buf_reader =
 	    new BufferedReader(new FileReader(data_file));
 
@@ -66,13 +70,19 @@ public class
 
             line = buf_reader.readLine();
         }
+    }
 
 
-	//////////////////////////////////////////////////
-	// PASS 1: Normalize data, determine midpoint
+    /**
+     * Normalize the data, set the thresholds.
+     *
+     * NB: override to set tight/loose thresholds manually; the
+     * default data allows them to be determined automatically.
+     */
 
-	start_time = System.currentTimeMillis();
-
+    public void
+	normalizeData ()
+    {
 	final double year_min = year_stats.getMin();
 	final double year_range = year_stats.getMax() - year_min;
 	final double size_min = size_stats.getMin();
@@ -88,22 +98,19 @@ public class
 	midpoint.size = Math.round(size_stats.getMean());
 	midpoint.normalize(year_min, year_range, size_min, size_range);
 
-	final double mean_distance = midpoint.getDistance(data_list.getFirst());
-	final double loose_threshold = mean_distance;
-	final double tight_threshold = mean_distance * LOOSE_TIGHT_RATIO;
-
-	elapsed_time = System.currentTimeMillis() - start_time;
-
-	System.out.println("ELAPSED: " + elapsed_time);
-	System.out.println("mean distance: " + MathUtils.round(mean_distance, 2));
+	mean_distance = midpoint.getDistance(data_list.getFirst());
+	loose_threshold = mean_distance;
+	tight_threshold = mean_distance * LOOSE_TIGHT_RATIO;
+    }
 
 
-	//////////////////////////////////////////////////
-	// PASS 2: Create canopies
+    /**
+     * Create canopies. This method performs the heavy lifting.
+     */
 
-	final HashSet<HashSet<Datum>> canopy_set = new HashSet<HashSet<Datum>>();
-
-	start_time = System.currentTimeMillis();
+    public void
+	createCanopies ()
+    {
 	int unmarked = data_list.size();
 
 	while (unmarked > 0) {
@@ -120,12 +127,12 @@ public class
 			d.marked = true;
 			unmarked--;
 
-			System.out.println("picked:\n" + d);
+			//System.out.println("picked:\n" + d);
 		    } else {
 			final double distance = picked.getDistance(d);
 
-			System.out.println(d);
-			System.out.println(MathUtils.round(distance, 2));
+			//System.out.println(d);
+			//System.out.println(MathUtils.round(distance, 2));
 
 			if (distance < loose_threshold) {
 			    canopy.add(d);
@@ -139,12 +146,48 @@ public class
 		}
 	    }
 	}
+    }
 
+
+    /**
+     * Main entry point.
+     */
+
+    public static void
+	main (final String[] args)
+	throws Exception
+ {
+	final String data_file = args[0];
+	final Canopy c = new Canopy();
+
+	long start_time = 0L;
+	long elapsed_time = 0L;
+
+	// load the data from a text file
+
+	c.loadData(data_file);
+
+	// PASS 1: normalize data, set thresholds
+
+	start_time = System.currentTimeMillis();
+	c.normalizeData();
 	elapsed_time = System.currentTimeMillis() - start_time;
 
 	System.out.println("ELAPSED: " + elapsed_time);
+	System.out.println("mean distance: " + MathUtils.round(c.mean_distance, 2));
 
-	for (HashSet<Datum> canopy : canopy_set) {
+	// PASS 2: create canopies
+
+	start_time = System.currentTimeMillis();
+	c.createCanopies();
+	elapsed_time = System.currentTimeMillis() - start_time;
+
+	// report results
+
+	System.out.println("ELAPSED: " + elapsed_time);
+	System.out.println("canopy count: " + c.canopy_set.size());
+
+	for (HashSet<Datum> canopy : c.canopy_set) {
 	    System.out.println(canopy);
 	}
     }
