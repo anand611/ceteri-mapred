@@ -10,8 +10,8 @@ import java.util.HashSet;
  */
 
 public class
-    Canopy
-    extends HashSet<Datum>
+    Canopy<T extends Datum>
+    extends HashSet<T>
 {
     //
 }

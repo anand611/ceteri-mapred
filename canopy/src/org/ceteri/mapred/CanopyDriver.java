@@ -32,7 +32,7 @@ public class
      */
 
     protected final LinkedList<Datum> data_list = new LinkedList<Datum>();
-    protected final HashSet<Canopy> canopy_set = new HashSet<Canopy>();
+    protected final HashSet<Canopy<Datum>> canopy_set = new HashSet<Canopy<Datum>>();
 
     protected double loose_threshold = 0.0D;
     protected double tight_threshold = 0.0D;
@@ -86,11 +86,11 @@ public class
     {
 	int unmarked = data_list.size();
 	Datum picked = null;
-	Canopy canopy = null;
+	Canopy<Datum> canopy = null;
 
 	while (unmarked > 0) {
 	    picked = null;
-	    canopy = new Canopy();
+	    canopy = new Canopy<Datum>();
 	    canopy_set.add(canopy);
 
 	    for (Datum d : data_list) {
@@ -162,7 +162,7 @@ public class
 	System.out.println("ELAPSED: " + elapsed_time);
 	System.out.println("canopy count: " + c.canopy_set.size());
 
-	for (Canopy canopy : c.canopy_set) {
+	for (Canopy<Datum> canopy : c.canopy_set) {
 	    System.out.println(canopy);
 	}
     }
