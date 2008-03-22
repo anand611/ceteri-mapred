@@ -103,6 +103,7 @@ http://code.google.com/p/ceteri-mapred/
 </delete>
 <delete dir="${build.dir}/**"/>
 <delete dir="${docs.dir}"/>
+<delete file="${app.jar}"/>
 </target>
 
 
