@@ -29,7 +29,7 @@ Java implementation of canopy clustering, based on the paper
 to Reference Matching", McCallum, Nigam, Ungar (2000).
 
 In this example, we cluster research results according to age and
-weight of the printed copy :) The test data "canopy/data/test.txt"
+weight of the printed copy :) The test data "canopy/data/test.tsv"
 comes from a bibliography of papers: <author, year, bytes>
 
 Initial check-in; to be reworked as a Hadoop example.
