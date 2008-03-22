@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import org.apache.commons.math.stat.descriptive.SummaryStatistics;
 import org.apache.commons.math.util.MathUtils;
 
 
@@ -19,7 +18,7 @@ import org.apache.commons.math.util.MathUtils;
  */
 
 public class
-    Canopy
+    CanopyDriver
 {
     /**
      * Public definitions.
@@ -35,10 +34,6 @@ public class
     protected final LinkedList<Datum> data_list = new LinkedList<Datum>();
     protected final HashSet<HashSet<Datum>> canopy_set = new HashSet<HashSet<Datum>>();
 
-    protected final SummaryStatistics year_stats = new SummaryStatistics();
-    protected final SummaryStatistics size_stats = new SummaryStatistics();
-
-    protected double mean_distance = 0.0D;
     protected double loose_threshold = 0.0D;
     protected double tight_threshold = 0.0D;
 
@@ -57,16 +52,8 @@ public class
         String line = buf_reader.readLine();
 
         while (line != null) {
-	    final String[] token = line.split(",");
-
-	    final Datum d = new Datum(token[0],
-				      Long.parseLong(token[1]),
-				      Long.parseLong(token[2])
-				      );
-
+	    final Datum d = new Datum(line);
 	    data_list.add(d);
-	    year_stats.addValue(d.year);
-	    size_stats.addValue(d.size);
 
             line = buf_reader.readLine();
         }
@@ -83,22 +70,8 @@ public class
     public void
 	normalizeData ()
     {
-	final double year_min = year_stats.getMin();
-	final double year_range = year_stats.getMax() - year_min;
-	final double size_min = size_stats.getMin();
-	final double size_range = size_stats.getMax() - size_min;
+	final double mean_distance = Datum.getMeanDistance(data_list);
 
-	for (Datum d : data_list) {
-	    d.normalize(year_min, year_range, size_min, size_range);
-	}
-
-	final Datum midpoint = new Datum("", 0L, 0L);
-
-	midpoint.year = Math.round(year_stats.getMean());
-	midpoint.size = Math.round(size_stats.getMean());
-	midpoint.normalize(year_min, year_range, size_min, size_range);
-
-	mean_distance = midpoint.getDistance(data_list.getFirst());
 	loose_threshold = mean_distance;
 	tight_threshold = mean_distance * LOOSE_TIGHT_RATIO;
     }
@@ -158,7 +131,7 @@ public class
 	throws Exception
  {
 	final String data_file = args[0];
-	final Canopy c = new Canopy();
+	final CanopyDriver c = new CanopyDriver();
 
 	long start_time = 0L;
 	long elapsed_time = 0L;
@@ -174,7 +147,8 @@ public class
 	elapsed_time = System.currentTimeMillis() - start_time;
 
 	System.out.println("ELAPSED: " + elapsed_time);
-	System.out.println("mean distance: " + MathUtils.round(c.mean_distance, 2));
+	System.out.println("tight threshold: " + MathUtils.round(c.tight_threshold, 2));
+	System.out.println("loose threshold: " + MathUtils.round(c.loose_threshold, 2));
 
 	// PASS 2: create canopies
 

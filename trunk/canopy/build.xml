@@ -144,7 +144,7 @@ http://code.google.com/p/ceteri-mapred/
  location="${basedir}/data/test.txt"
 />
 <java
- classname="org.ceteri.mapred.Canopy"
+ classname="org.ceteri.mapred.CanopyDriver"
  fork="true"
 >
 <classpath>
