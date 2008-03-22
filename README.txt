@@ -7,7 +7,7 @@ applications of MapReduce.
 	Example 1: jyte.com "cred" graph
 
 In a graph of "cred" data from jyte.com the end-users -- identified by
-their respective OpenID URIs -- give each other specifc tags for
+their respective OpenID URIs -- give each other specific tags for
 credibility. The graph can be analyzed using a simplified PageRank
 (i.e., one which has no damping term) to produce rank values that
 correlate with the proprietary "cred points" determined by JanRain.
