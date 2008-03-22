@@ -24,7 +24,7 @@ public class
      * Public definitions.
      */
 
-    public final static double LOOSE_TIGHT_RATIO = 0.8D;
+    public final static double LOOSE_TIGHT_RATIO = 0.7D;
 
 
     /**
