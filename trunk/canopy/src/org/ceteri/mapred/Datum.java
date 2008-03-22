@@ -1,5 +1,8 @@
 package org.ceteri.mapred;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
 import java.util.LinkedList;
 
 import org.apache.commons.math.stat.descriptive.SummaryStatistics;
@@ -22,12 +25,17 @@ public class
      * Public members.
      */
 
-    public String label = null;
-    public long year = 0L;
-    public long size = 0L;
-    public double year_value = 0.0D;
-    public double size_value = 0.0D;
+    public String key = null;
     public boolean marked = false;
+
+    /**
+     * Protected members.
+     */
+
+    protected long year = 0L;
+    protected long size = 0L;
+    protected double year_value = 0.0D;
+    protected double size_value = 0.0D;
 
 
     /**
@@ -39,24 +47,12 @@ public class
     {
 	final String[] token = line.split(",");
 
-	this.label = token[0];
+	this.key = token[0];
 	this.year = Long.parseLong(token[1]);
 	this.size = Long.parseLong(token[2]);
 
 	year_stats.addValue(year);
 	size_stats.addValue(size);
-    }
-
-
-    /**
-     * Normalize the values, within [0.0, 1.0]
-     */
-
-    public void
-	normalize (final double year_min, final double year_range, final double size_min, final double size_range)
-    {
-	year_value = ((double) year - year_min) / year_range;
-	size_value = ((double) size - size_min) / size_range;
     }
 
 
@@ -87,7 +83,7 @@ public class
 	final StringBuilder sb = new StringBuilder();
 
 	sb.append('(');
-	sb.append(label);
+	sb.append(key);
 	sb.append(' ');
 	sb.append(year);
 	sb.append(' ');
@@ -95,6 +91,40 @@ public class
 	sb.append(')');
 
 	return sb.toString();
+    }
+
+
+    /**
+     * Load the data from a text file
+     */
+
+    public static void
+	loadData (final String data_file, final LinkedList<Datum> data_list)
+	throws Exception
+    {
+        final BufferedReader buf_reader =
+	    new BufferedReader(new FileReader(data_file));
+
+        String line = buf_reader.readLine();
+
+        while (line != null) {
+	    final Datum d = new Datum(line);
+	    data_list.add(d);
+
+            line = buf_reader.readLine();
+        }
+    }
+
+
+    /**
+     * Normalize the values, within [0.0, 1.0]
+     */
+
+    public void
+	normalize (final double year_min, final double year_range, final double size_min, final double size_range)
+    {
+	year_value = ((double) year - year_min) / year_range;
+	size_value = ((double) size - size_min) / size_range;
     }
 
 
@@ -111,7 +141,8 @@ public class
 	final double size_min = size_stats.getMin();
 	final double size_range = size_stats.getMax() - size_min;
 
-	for (Datum d : data_list) {
+	for (Object obj : data_list) {
+	    final Datum d = (Datum) obj;
 	    d.normalize(year_min, year_range, size_min, size_range);
 	}
 
@@ -120,6 +151,8 @@ public class
 
 	midpoint.normalize(year_min, year_range, size_min, size_range);
 
-	return midpoint.getDistance(data_list.getFirst());
+	final Datum d1 = (Datum) data_list.getFirst();
+
+	return midpoint.getDistance(d1);
     }
 }

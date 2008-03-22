@@ -1,8 +1,5 @@
 package org.ceteri.mapred;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -39,39 +36,15 @@ public class
 
 
     /**
-     * Load the data from a text file
-     */
-
-    public void
-	loadData (final String data_file)
-	throws Exception
-    {
-        final BufferedReader buf_reader =
-	    new BufferedReader(new FileReader(data_file));
-
-        String line = buf_reader.readLine();
-
-        while (line != null) {
-	    final Datum d = new Datum(line);
-	    data_list.add(d);
-
-            line = buf_reader.readLine();
-        }
-    }
-
-
-    /**
-     * Normalize the data, set the thresholds.
+     * Set the thresholds.
      *
      * NB: override to set tight/loose thresholds manually; the
      * default data allows them to be determined automatically.
      */
 
     public void
-	normalizeData ()
+	setThresholds (final double mean_distance)
     {
-	final double mean_distance = Datum.getMeanDistance(data_list);
-
 	loose_threshold = mean_distance;
 	tight_threshold = mean_distance * LOOSE_TIGHT_RATIO;
     }
@@ -139,12 +112,12 @@ public class
 
 	// load the data from a text file
 
-	c.loadData(data_file);
+	Datum.loadData(data_file, c.data_list);
 
 	// PASS 1: normalize data, set thresholds
 
 	start_time = System.currentTimeMillis();
-	c.normalizeData();
+	c.setThresholds(Datum.getMeanDistance(c.data_list));
 	elapsed_time = System.currentTimeMillis() - start_time;
 
 	System.out.println("ELAPSED: " + elapsed_time);
