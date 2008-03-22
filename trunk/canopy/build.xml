@@ -2,7 +2,7 @@
 
 <project
  name="mapred"
- default="rank"
+ default="canopy"
  basedir="."
 >
 <description>
@@ -135,8 +135,8 @@ http://code.google.com/p/ceteri-mapred/
 
 
 <target
-  name="rank"
-  description="misc. testing"
+  name="canopy"
+  description="create canopy clusters on test data"
   depends="compile"
 >
 <property
