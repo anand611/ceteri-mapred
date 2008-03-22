@@ -1,5 +1,9 @@
 package org.ceteri.mapred;
 
+import java.util.LinkedList;
+
+import org.apache.commons.math.stat.descriptive.SummaryStatistics;
+
 
 /**
  * Represents one data point in the sample being clustered.
@@ -10,6 +14,10 @@ package org.ceteri.mapred;
 public class
     Datum
 {
+    public final static SummaryStatistics year_stats = new SummaryStatistics();
+    public final static SummaryStatistics size_stats = new SummaryStatistics();
+
+
     /**
      * Public members.
      */
@@ -27,11 +35,16 @@ public class
      */
 
     public 
-	Datum (final String label, final long year, final long size)
+	Datum (final String line)
     {
-	this.label = label;
-	this.year = year;
-	this.size = size;
+	final String[] token = line.split(",");
+
+	this.label = token[0];
+	this.year = Long.parseLong(token[1]);
+	this.size = Long.parseLong(token[2]);
+
+	year_stats.addValue(year);
+	size_stats.addValue(size);
     }
 
 
@@ -82,5 +95,31 @@ public class
 	sb.append(')');
 
 	return sb.toString();
+    }
+
+
+    /**
+     * Calculate a "midpoint" within the data population, to use for
+     * setting thresholds.
+     */
+
+    public static double
+	getMeanDistance (final LinkedList<Datum> data_list)
+    {
+	final double year_min = year_stats.getMin();
+	final double year_range = year_stats.getMax() - year_min;
+	final double size_min = size_stats.getMin();
+	final double size_range = size_stats.getMax() - size_min;
+
+	for (Datum d : data_list) {
+	    d.normalize(year_min, year_range, size_min, size_range);
+	}
+
+	final Datum midpoint =
+	    new Datum("," + Math.round(year_stats.getMean()) + "," + Math.round(size_stats.getMean()));
+
+	midpoint.normalize(year_min, year_range, size_min, size_range);
+
+	return midpoint.getDistance(data_list.getFirst());
     }
 }
