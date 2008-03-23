@@ -141,7 +141,7 @@ http://code.google.com/p/ceteri-mapred/
 >
 <property
  name="data.file"
- location="${basedir}/data/test.tsv"
+ location="${basedir}/data/test.csv"
 />
 <java
  classname="org.ceteri.mapred.CanopyDriver"
