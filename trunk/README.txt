@@ -3,6 +3,9 @@ README for http://code.google.com/p/ceteri-mapred/
 Code examples based on the Hadoop open source project to explore
 applications of MapReduce.
 
+See the accompanying articles at:
+   http://ceteri.blogspot.com/search/label/hadoop
+
 
 	Example 1: jyte.com "cred" graph
 
@@ -29,7 +32,7 @@ Java implementation of canopy clustering, based on the paper
 to Reference Matching", McCallum, Nigam, Ungar (2000).
 
 In this example, we cluster research results according to age and
-weight of the printed copy :) The test data "canopy/data/test.tsv"
+weight of the printed copy :) The test data "canopy/data/test.csv"
 comes from a bibliography of papers: <author, year, bytes>
 
 Initial check-in; to be reworked as a Hadoop example.
